@@ -1,192 +1,162 @@
-import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import { useState, useEffect } from 'react'
+import { getDueDateStatus, formatDueDate, getRelativeTime } from './utils/dateUtils'
+import type { DueDateStatus } from './utils/dateUtils'
 import './App.css'
 
-type Todo = {
+interface Todo {
   id: string
   text: string
   completed: boolean
   createdAt: number
+  dueDate?: number
 }
-
-type Filter = 'all' | 'active' | 'done'
 
 const STORAGE_KEY = 'postnord-todos-v1'
 
-const FILTER_LABELS: Record<Filter, string> = {
-  all: 'All',
-  active: 'Active',
-  done: 'Done',
-}
-
-function readTodosFromStorage(): Todo[] {
-  const stored = localStorage.getItem(STORAGE_KEY)
-
-  if (!stored) {
-    return []
-  }
-
+function loadTodos(): Todo[] {
   try {
-    const parsed = JSON.parse(stored) as Todo[]
-    return Array.isArray(parsed) ? parsed : []
+    const stored = localStorage.getItem(STORAGE_KEY)
+    return stored ? JSON.parse(stored) : []
   } catch {
     return []
   }
 }
 
-function createTodo(text: string): Todo {
+function saveTodos(todos: Todo[]): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+}
+
+function createTodo(text: string, dueDate?: number): Todo {
   return {
     id: crypto.randomUUID(),
     text,
     completed: false,
     createdAt: Date.now(),
+    ...(dueDate ? { dueDate } : {}),
   }
 }
 
+function getDueDateClassName(status: DueDateStatus): string {
+  if (status === 'overdue') return 'overdue'
+  if (status === 'warning') return 'warning'
+  return ''
+}
+
 function App() {
-  const [todos, setTodos] = useState<Todo[]>(readTodosFromStorage)
-  const [draft, setDraft] = useState('')
-  const [filter, setFilter] = useState<Filter>('all')
+  const [todos, setTodos] = useState<Todo[]>(loadTodos)
+  const [draftText, setDraftText] = useState('')
+  const [draftDueDate, setDraftDueDate] = useState('')
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+    saveTodos(todos)
   }, [todos])
 
-  const filteredTodos = useMemo(() => {
-    switch (filter) {
-      case 'active':
-        return todos.filter((todo) => !todo.completed)
-      case 'done':
-        return todos.filter((todo) => todo.completed)
-      default:
-        return todos
-    }
-  }, [filter, todos])
+  // Re-render periodically to update relative times and statuses
+  const [, setTick] = useState(0)
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 60_000)
+    return () => clearInterval(interval)
+  }, [])
 
-  const activeCount = useMemo(
-    () => todos.filter((todo) => !todo.completed).length,
-    [todos],
-  )
+  function submitTodo(e: React.FormEvent) {
+    e.preventDefault()
+    const text = draftText.trim()
+    if (!text) return
 
-  const completedCount = todos.length - activeCount
-
-  const submitTodo = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    const text = draft.trim()
-    if (!text) {
-      return
+    let dueDate: number | undefined
+    if (draftDueDate) {
+      dueDate = new Date(draftDueDate).getTime()
     }
 
-    setTodos((current) => [createTodo(text), ...current])
-    setDraft('')
+    setTodos((prev) => [...prev, createTodo(text, dueDate)])
+    setDraftText('')
+    setDraftDueDate('')
   }
 
-  const toggleTodo = (id: string) => {
-    setTodos((current) =>
-      current.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
+  function toggleTodo(id: string) {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
     )
   }
 
-  const deleteTodo = (id: string) => {
-    setTodos((current) => current.filter((todo) => todo.id !== id))
-  }
-
-  const clearCompleted = () => {
-    setTodos((current) => current.filter((todo) => !todo.completed))
+  function deleteTodo(id: string) {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id))
   }
 
   return (
-    <div className="app-shell">
-      <header className="hero">
-        <div className="hero__logo" aria-hidden>
-          <span className="hero__dot" />
-          <span className="hero__name">POSTNORD TASKS</span>
-        </div>
-        <h1>Local Todo Manager</h1>
-        <p>Simple task tracking in your browser, with no backend setup.</p>
+    <div className="app">
+      <header className="app-header">
+        <h1>Todo App</h1>
       </header>
 
-      <main className="todo-card">
-        <form className="todo-form" onSubmit={submitTodo}>
-          <label htmlFor="todo-input" className="sr-only">
-            Add a task
-          </label>
-          <input
-            id="todo-input"
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            placeholder="Add a delivery, follow-up, or reminder"
-            maxLength={120}
-          />
-          <button type="submit">Add</button>
-        </form>
+      <form className="todo-form" onSubmit={submitTodo}>
+        <input
+          type="text"
+          className="todo-input"
+          placeholder="What needs to be done?"
+          value={draftText}
+          onChange={(e) => setDraftText(e.target.value)}
+          aria-label="New todo text"
+        />
+        <input
+          type="datetime-local"
+          className="due-date-input"
+          value={draftDueDate}
+          onChange={(e) => setDraftDueDate(e.target.value)}
+          aria-label="Due date"
+        />
+        <button type="submit" className="todo-submit" disabled={!draftText.trim()}>
+          Add
+        </button>
+      </form>
 
-        <section className="toolbar" aria-label="Todo controls">
-          <div className="filters" role="tablist" aria-label="Filter tasks">
-            {(Object.keys(FILTER_LABELS) as Filter[]).map((key) => (
-              <button
-                key={key}
-                type="button"
-                className={filter === key ? 'is-active' : ''}
-                onClick={() => setFilter(key)}
-                role="tab"
-                aria-selected={filter === key}
-              >
-                {FILTER_LABELS[key]}
-              </button>
-            ))}
-          </div>
-          <p className="stats">
-            <span>{activeCount} open</span>
-            <span>{completedCount} done</span>
-          </p>
-        </section>
+      <ul className="todo-list" aria-label="Todo list">
+        {todos.map((todo) => {
+          const status = getDueDateStatus(todo.dueDate)
+          const statusClass = getDueDateClassName(status)
 
-        <ul className="todo-list" aria-live="polite">
-          {filteredTodos.length === 0 ? (
-            <li className="empty-state">No tasks in this view.</li>
-          ) : (
-            filteredTodos.map((todo) => (
-              <li
-                key={todo.id}
-                className={todo.completed ? 'todo-item completed' : 'todo-item'}
-              >
-                <label className="todo-item__label">
-                  <input
-                    type="checkbox"
-                    checked={todo.completed}
-                    onChange={() => toggleTodo(todo.id)}
-                  />
-                  <span>{todo.text}</span>
-                </label>
-                <button
-                  type="button"
-                  className="todo-item__delete"
-                  onClick={() => deleteTodo(todo.id)}
-                  aria-label={`Delete ${todo.text}`}
+          return (
+            <li
+              key={todo.id}
+              className={`todo-item ${todo.completed ? 'completed' : ''} ${statusClass}`}
+            >
+              <label className="todo-label">
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => toggleTodo(todo.id)}
+                  aria-label={`Mark "${todo.text}" as ${todo.completed ? 'incomplete' : 'complete'}`}
+                />
+                <span className="todo-text">{todo.text}</span>
+              </label>
+
+              {todo.dueDate && (
+                <span
+                  className={`due-date-badge ${statusClass}`}
+                  title={getRelativeTime(todo.dueDate)}
+                  aria-label={`Due: ${formatDueDate(todo.dueDate)} (${getRelativeTime(todo.dueDate)})`}
                 >
-                  Remove
-                </button>
-              </li>
-            ))
-          )}
-        </ul>
+                  {formatDueDate(todo.dueDate)} &middot; {getRelativeTime(todo.dueDate)}
+                </span>
+              )}
 
-        <footer className="card-footer">
-          <button
-            type="button"
-            className="secondary"
-            onClick={clearCompleted}
-            disabled={completedCount === 0}
-          >
-            Clear done
-          </button>
-          <small>Stored locally in this browser</small>
-        </footer>
-      </main>
+              <button
+                className="todo-delete"
+                onClick={() => deleteTodo(todo.id)}
+                aria-label={`Delete "${todo.text}"`}
+              >
+                &times;
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+
+      {todos.length === 0 && (
+        <p className="empty-state">No todos yet. Add one above!</p>
+      )}
     </div>
   )
 }
