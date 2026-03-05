@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
+import { getDueDateStatus, formatDueDate, getRelativeTime } from './utils/dateUtils'
+import type { DueDateStatus } from './utils/dateUtils'
 import './App.css'
 
 type Todo = {
@@ -7,6 +9,7 @@ type Todo = {
   text: string
   completed: boolean
   createdAt: number
+  dueDate?: number
 }
 
 type Filter = 'all' | 'active' | 'done'
@@ -28,29 +31,52 @@ function readTodosFromStorage(): Todo[] {
 
   try {
     const parsed = JSON.parse(stored) as Todo[]
-    return Array.isArray(parsed) ? parsed : []
+    return Array.isArray(parsed)
+      ? parsed.map((t) => ({ ...t, dueDate: t.dueDate ?? undefined }))
+      : []
   } catch {
     return []
   }
 }
 
-function createTodo(text: string): Todo {
+function createTodo(text: string, dueDate?: number): Todo {
   return {
     id: crypto.randomUUID(),
     text,
     completed: false,
     createdAt: Date.now(),
+    ...(dueDate ? { dueDate } : {}),
   }
+}
+
+function dueDateStatusClass(status: DueDateStatus): string {
+  if (status === 'overdue') return ' todo-item--overdue'
+  if (status === 'warning') return ' todo-item--due-soon'
+  return ''
+}
+
+function dueDateBadgeClass(status: DueDateStatus): string {
+  if (status === 'overdue') return ' due-badge--overdue'
+  if (status === 'warning') return ' due-badge--warning'
+  return ''
 }
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>(readTodosFromStorage)
   const [draft, setDraft] = useState('')
+  const [draftDueDate, setDraftDueDate] = useState('')
   const [filter, setFilter] = useState<Filter>('all')
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
   }, [todos])
+
+  // Re-render every 60 seconds to keep due-date statuses current
+  const [, setTick] = useState(0)
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 60_000)
+    return () => clearInterval(interval)
+  }, [])
 
   const filteredTodos = useMemo(() => {
     switch (filter) {
@@ -78,8 +104,14 @@ function App() {
       return
     }
 
-    setTodos((current) => [createTodo(text), ...current])
+    let dueDate: number | undefined
+    if (draftDueDate) {
+      const timestamp = new Date(draftDueDate).getTime()
+      dueDate = Number.isFinite(timestamp) ? timestamp : undefined
+    }
+    setTodos((current) => [createTodo(text, dueDate), ...current])
     setDraft('')
+    setDraftDueDate('')
   }
 
   const toggleTodo = (id: string) => {
@@ -121,6 +153,14 @@ function App() {
             placeholder="Add a delivery, follow-up, or reminder"
             maxLength={120}
           />
+          <input
+            id="todo-due-date"
+            type="datetime-local"
+            className="todo-form__due-date"
+            value={draftDueDate}
+            onChange={(event) => setDraftDueDate(event.target.value)}
+            aria-label="Due date"
+          />
           <button type="submit">Add</button>
         </form>
 
@@ -149,29 +189,45 @@ function App() {
           {filteredTodos.length === 0 ? (
             <li className="empty-state">No tasks in this view.</li>
           ) : (
-            filteredTodos.map((todo) => (
-              <li
-                key={todo.id}
-                className={todo.completed ? 'todo-item completed' : 'todo-item'}
-              >
-                <label className="todo-item__label">
-                  <input
-                    type="checkbox"
-                    checked={todo.completed}
-                    onChange={() => toggleTodo(todo.id)}
-                  />
-                  <span>{todo.text}</span>
-                </label>
-                <button
-                  type="button"
-                  className="todo-item__delete"
-                  onClick={() => deleteTodo(todo.id)}
-                  aria-label={`Delete ${todo.text}`}
-                >
-                  Remove
-                </button>
-              </li>
-            ))
+            filteredTodos.map((todo) => {
+              const status = getDueDateStatus(todo.dueDate)
+              const itemClass =
+                (todo.completed ? 'todo-item completed' : 'todo-item') +
+                (todo.completed ? '' : dueDateStatusClass(status))
+
+              return (
+                <li key={todo.id} className={itemClass}>
+                  <label className="todo-item__label">
+                    <input
+                      type="checkbox"
+                      checked={todo.completed}
+                      onChange={() => toggleTodo(todo.id)}
+                    />
+                    <span>{todo.text}</span>
+                  </label>
+
+                  <div className="todo-item__meta">
+                    {todo.dueDate && (
+                      <span
+                        className={`due-badge${dueDateBadgeClass(status)}`}
+                        title={getRelativeTime(todo.dueDate)}
+                        aria-label={`Due: ${formatDueDate(todo.dueDate)} (${getRelativeTime(todo.dueDate)})`}
+                      >
+                        {formatDueDate(todo.dueDate)} &middot; {getRelativeTime(todo.dueDate)}
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      className="todo-item__delete"
+                      onClick={() => deleteTodo(todo.id)}
+                      aria-label={`Delete ${todo.text}`}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              )
+            })
           )}
         </ul>
 

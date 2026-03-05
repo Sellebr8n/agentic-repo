@@ -58,8 +58,14 @@
 
 .todo-form {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   gap: 0.6rem;
+  align-items: center;
+}
+
+.todo-form__due-date {
+  min-width: 11rem;
+  font-size: 0.88rem;
 }
 
 .todo-form input {
@@ -171,6 +177,25 @@ button:disabled {
   align-items: center;
   gap: 0.7rem;
   animation: list-in 260ms ease;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+/* Due-date warning states */
+.todo-item--due-soon {
+  border-color: #e6a817;
+  background: linear-gradient(100deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.todo-item--overdue {
+  border-color: #dc2626;
+  background: linear-gradient(100deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+/* Suppress warning colors for completed items */
+.todo-item.completed.todo-item--due-soon,
+.todo-item.completed.todo-item--overdue {
+  border-color: #d1def6;
+  background: linear-gradient(100deg, #f4f8ff 0%, #ebf6ff 100%);
 }
 
 .todo-item__label {
@@ -194,6 +219,37 @@ button:disabled {
 .todo-item.completed span {
   text-decoration: line-through;
   color: #5076b4;
+}
+
+/* Meta section (due date badge + delete button) */
+.todo-item__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+/* Due date badge */
+.due-badge {
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.5rem;
+  color: #46659d;
+  background: #eef3fb;
+  white-space: nowrap;
+}
+
+.due-badge--warning {
+  color: #b45309;
+  background: #fef3c7;
+  font-weight: 600;
+}
+
+.due-badge--overdue {
+  color: #dc2626;
+  background: #fee2e2;
+  font-weight: 600;
 }
 
 .todo-item__delete {
@@ -289,6 +345,10 @@ button:disabled {
 
   .todo-item {
     grid-template-columns: 1fr;
+  }
+
+  .todo-item__meta {
+    flex-wrap: wrap;
   }
 
   .todo-item__delete {
