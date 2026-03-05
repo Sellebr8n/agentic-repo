@@ -44,6 +44,7 @@ function createTodo(text: string): Todo {
 }
 
 function App() {
+  
   const [todos, setTodos] = useState<Todo[]>(readTodosFromStorage)
   const [draft, setDraft] = useState('')
   const [filter, setFilter] = useState<Filter>('all')
