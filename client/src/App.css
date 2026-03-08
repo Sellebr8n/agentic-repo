@@ -79,9 +79,9 @@
   outline-offset: 2px;
 }
 
-.todo-form__due-date {
+.todo-form input.todo-form__due-date {
   min-width: 11rem;
-  font-size: 0.88rem !important;
+  font-size: 0.88rem;
 }
 
 button {
