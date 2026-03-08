@@ -31,7 +31,7 @@ function getDueDateStatus(dueDate: string | null | undefined): DueDateStatus {
   const due = new Date(dueDate).getTime()
 
   if (isNaN(due)) return 'default'
-  if (due < now) return 'overdue'
+  if (due <= now) return 'overdue'
   if (due - now <= WARNING_THRESHOLD_MS) return 'due-soon'
 
   return 'default'
