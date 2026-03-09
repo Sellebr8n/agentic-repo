@@ -39,6 +39,7 @@ function getDueDateStatus(dueDate: string | null | undefined): DueDateStatus {
 
 function formatDueDate(dueDate: string): string {
   const date = new Date(dueDate)
+  if (isNaN(date.getTime())) return 'Invalid date'
   return date.toLocaleDateString(undefined, {
     month: 'short',
     day: 'numeric',
@@ -56,9 +57,14 @@ function readTodosFromStorage(): Todo[] {
   }
 
   try {
-    const parsed = JSON.parse(stored) as Todo[]
+    const parsed = JSON.parse(stored) as unknown[]
     return Array.isArray(parsed)
-      ? parsed.map((t) => ({ ...t, dueDate: t.dueDate ?? null }))
+      ? parsed
+          .filter(
+            (t): t is Record<string, unknown> =>
+              t !== null && typeof t === 'object' && !Array.isArray(t),
+          )
+          .map((t) => ({ ...t, dueDate: (t.dueDate as string | null | undefined) ?? null } as Todo))
       : []
   } catch {
     return []
