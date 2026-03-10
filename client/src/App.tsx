@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import { Plus, Trash2, ListTodo, Circle, CheckCircle } from 'lucide-react'
 import './App.css'
 
@@ -141,6 +141,12 @@ function App() {
     setTodos((current) => current.filter((todo) => !todo.completed))
   }
 
+  const FILTER_ICONS: Record<Filter, ReactNode> = {
+    all: <ListTodo size={16} />,
+    active: <Circle size={16} />,
+    done: <CheckCircle size={16} />,
+  }
+
   return (
     <div className="app-shell">
       <header className="hero">
@@ -180,31 +186,19 @@ function App() {
 
         <section className="toolbar" aria-label="Todo controls">
           <div className="filters" role="tablist" aria-label="Filter tasks">
-            {(Object.keys(FILTER_LABELS) as Filter[]).map((key) => {
-              const getFilterIcon = () => {
-                switch (key) {
-                  case 'all':
-                    return <ListTodo size={16} />
-                  case 'active':
-                    return <Circle size={16} />
-                  case 'done':
-                    return <CheckCircle size={16} />
-                }
-              }
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  className={`button-with-icon filter-button ${filter === key ? 'is-active' : ''}`}
-                  onClick={() => setFilter(key)}
-                  role="tab"
-                  aria-selected={filter === key}
-                >
-                  {getFilterIcon()}
-                  {FILTER_LABELS[key]}
-                </button>
-              )
-            })}
+            {(Object.keys(FILTER_LABELS) as Filter[]).map((key) => (
+              <button
+                key={key}
+                type="button"
+                className={['button-with-icon', 'filter-button', filter === key && 'is-active'].filter(Boolean).join(' ')}
+                onClick={() => setFilter(key)}
+                role="tab"
+                aria-selected={filter === key}
+              >
+                {FILTER_ICONS[key]}
+                {FILTER_LABELS[key]}
+              </button>
+            ))}
           </div>
           <p className="stats">
             <span>{activeCount} open</span>

@@ -284,6 +284,24 @@ button:disabled {
   border: 1px solid #fecaca;
 }
 
+.secondary--destructive:hover:not(:disabled) {
+  background: #fecaca;
+  border-color: #fca5a5;
+}
+
+.secondary--destructive:focus-visible:not(:disabled) {
+  outline: 2px solid #b91c1c;
+  outline-offset: 2px;
+}
+
+.secondary--destructive:disabled {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #fca5a5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .card-footer small {
   color: #3f5f98;
 }

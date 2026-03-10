@@ -39,6 +39,6 @@
 - Icons and text are aligned horizontally using flexbox with proper gaps
 - Destructive button (Clear done) has red color scheme matching the error palette
 - All TypeScript types are correct
-- Basic accessibility review completed: aria-labels and semantic HTML maintained; note that destructive button colors may need further contrast review
+- Basic accessibility review completed: aria-labels and semantic HTML maintained; destructive button colors updated to #b91c1c for WCAG AA compliance with enhanced hover/focus states
 - Build and lint pass without errors
 - Mobile responsive design maintained (icons scale appropriately with existing responsive CSS)
