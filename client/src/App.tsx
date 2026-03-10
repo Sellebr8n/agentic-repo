@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEvent, ReactNode } from 'react'
+import { Plus, Trash2, ListTodo, Circle, CheckCircle } from 'lucide-react'
 import './App.css'
 
 type Todo = {
@@ -140,6 +141,12 @@ function App() {
     setTodos((current) => current.filter((todo) => !todo.completed))
   }
 
+  const FILTER_ICONS: Record<Filter, ReactNode> = {
+    all: <ListTodo size={16} />,
+    active: <Circle size={16} />,
+    done: <CheckCircle size={16} />,
+  }
+
   return (
     <div className="app-shell">
       <header className="hero">
@@ -171,7 +178,10 @@ function App() {
             aria-label="Due date"
             className="todo-form__due-date"
           />
-          <button type="submit">Add</button>
+          <button type="submit" className="button-with-icon">
+            <Plus size={18} />
+            Add
+          </button>
         </form>
 
         <section className="toolbar" aria-label="Todo controls">
@@ -180,11 +190,12 @@ function App() {
               <button
                 key={key}
                 type="button"
-                className={filter === key ? 'is-active' : ''}
+                className={['button-with-icon', 'filter-button', filter === key && 'is-active'].filter(Boolean).join(' ')}
                 onClick={() => setFilter(key)}
                 role="tab"
                 aria-selected={filter === key}
               >
+                {FILTER_ICONS[key]}
                 {FILTER_LABELS[key]}
               </button>
             ))}
@@ -236,10 +247,11 @@ function App() {
                     )}
                     <button
                       type="button"
-                      className="todo-item__delete"
+                      className="todo-item__delete button-with-icon"
                       onClick={() => deleteTodo(todo.id)}
                       aria-label={`Delete ${todo.text}`}
                     >
+                      <Trash2 size={16} />
                       Remove
                     </button>
                   </div>
@@ -252,10 +264,11 @@ function App() {
         <footer className="card-footer">
           <button
             type="button"
-            className="secondary"
+            className="secondary secondary--destructive button-with-icon"
             onClick={clearCompleted}
             disabled={completedCount === 0}
           >
+            <Trash2 size={18} />
             Clear done
           </button>
           <small>Stored locally in this browser</small>
