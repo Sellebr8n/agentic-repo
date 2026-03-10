@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
+import { Plus, Trash2, ListTodo, Circle, CheckCircle } from 'lucide-react'
 import './App.css'
 
 type Todo = {
@@ -171,23 +172,39 @@ function App() {
             aria-label="Due date"
             className="todo-form__due-date"
           />
-          <button type="submit">Add</button>
+          <button type="submit" className="button-with-icon">
+            <Plus size={18} />
+            Add
+          </button>
         </form>
 
         <section className="toolbar" aria-label="Todo controls">
           <div className="filters" role="tablist" aria-label="Filter tasks">
-            {(Object.keys(FILTER_LABELS) as Filter[]).map((key) => (
-              <button
-                key={key}
-                type="button"
-                className={filter === key ? 'is-active' : ''}
-                onClick={() => setFilter(key)}
-                role="tab"
-                aria-selected={filter === key}
-              >
-                {FILTER_LABELS[key]}
-              </button>
-            ))}
+            {(Object.keys(FILTER_LABELS) as Filter[]).map((key) => {
+              const getFilterIcon = () => {
+                switch (key) {
+                  case 'all':
+                    return <ListTodo size={16} />
+                  case 'active':
+                    return <Circle size={16} />
+                  case 'done':
+                    return <CheckCircle size={16} />
+                }
+              }
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  className={`button-with-icon filter-button ${filter === key ? 'is-active' : ''}`}
+                  onClick={() => setFilter(key)}
+                  role="tab"
+                  aria-selected={filter === key}
+                >
+                  {getFilterIcon()}
+                  {FILTER_LABELS[key]}
+                </button>
+              )
+            })}
           </div>
           <p className="stats">
             <span>{activeCount} open</span>
@@ -236,10 +253,11 @@ function App() {
                     )}
                     <button
                       type="button"
-                      className="todo-item__delete"
+                      className="todo-item__delete button-with-icon"
                       onClick={() => deleteTodo(todo.id)}
                       aria-label={`Delete ${todo.text}`}
                     >
+                      <Trash2 size={16} />
                       Remove
                     </button>
                   </div>
@@ -252,10 +270,11 @@ function App() {
         <footer className="card-footer">
           <button
             type="button"
-            className="secondary"
+            className="secondary secondary--destructive button-with-icon"
             onClick={clearCompleted}
             disabled={completedCount === 0}
           >
+            <Trash2 size={18} />
             Clear done
           </button>
           <small>Stored locally in this browser</small>

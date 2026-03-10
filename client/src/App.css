@@ -95,6 +95,12 @@ button {
   transition: transform 130ms ease, box-shadow 130ms ease, opacity 130ms ease;
 }
 
+.button-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .todo-form button {
   color: #ffffff;
   background: linear-gradient(130deg, #0b2f88 0%, #0f68d0 65%, #0ea6de 100%);
@@ -139,6 +145,10 @@ button:disabled {
   color: #18438f;
   background: transparent;
   font-size: 0.9rem;
+}
+
+.filter-button {
+  gap: 0.3rem;
 }
 
 .filters button.is-active {
@@ -266,6 +276,12 @@ button:disabled {
   color: #0c367f;
   background: #e9f2ff;
   border: 1px solid #c9daf9;
+}
+
+.secondary--destructive {
+  color: #dc2626;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
 }
 
 .card-footer small {
