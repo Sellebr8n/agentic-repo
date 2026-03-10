@@ -31,7 +31,7 @@
 2. `client/src/App.css`
    - Added `.button-with-icon` class (lines 98-102): `display: inline-flex; align-items: center; gap: 0.4rem;` for proper icon+text alignment
    - Added `.filter-button` class (lines 150-152): Reduces gap to `0.3rem` for compact filter button appearance
-   - Added `.secondary--destructive` class (lines 281-285): Red styling with `color: #dc2626; background: #fee2e2; border: 1px solid #fecaca;` for destructive action visual feedback
+   - Added `.secondary--destructive` class (lines 281-285): Red styling with `color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca;` for destructive action visual feedback
 
 ### Verification
 - All icons are properly imported from lucide-react
