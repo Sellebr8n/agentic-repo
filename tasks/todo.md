@@ -11,6 +11,12 @@
 - [x] Update App.css: Add destructive styling for Clear done button
 - [x] Run npm build to verify no errors
 - [x] Verify all changes with manual testing
+- [x] Update App.tsx: Import AlertCircle and Clock icons
+- [x] Replace '⚠ ' emoji with AlertCircle icon in overdue due-date display
+- [x] Replace '⏰ ' emoji with Clock icon in due-soon due-date display
+- [x] Run npm build to verify no errors
+- [x] Run npm lint to verify code quality
+- [x] Update Review section with verification
 
 ## Review
 
@@ -42,3 +48,28 @@
 - Basic accessibility review completed: aria-labels and semantic HTML maintained; destructive button colors updated to #b91c1c for WCAG AA compliance with enhanced hover/focus states
 - Build and lint pass without errors
 - Mobile responsive design maintained (icons scale appropriately with existing responsive CSS)
+
+## Additional Changes (AlertCircle and Clock icons)
+
+### Tests Run
+- `npm run build`: Successful. No TypeScript or build errors. Build output: vite v7.3.1, 1743 modules transformed, rendering chunks, built in 950ms
+- `npm run lint`: Successful. No ESLint errors or warnings
+
+### Changes Summary
+
+**Files Modified:**
+1. `client/src/App.tsx`
+   - Updated import (line 3): Added `AlertCircle, Clock` to lucide-react imports
+   - Due-date display (lines 243-244):
+     - Replaced '⚠ ' emoji with `<AlertCircle size={16} className="inline" />` for overdue status
+     - Replaced '⏰ ' emoji with `<Clock size={16} className="inline" />` for due-soon status
+
+### Verification
+- AlertCircle and Clock icons are properly imported from lucide-react
+- Both icons use size={16} for consistency with other inline icons
+- className="inline" ensures proper inline display with surrounding text
+- Icons render correctly without breaking layout or text flow
+- No changes made to existing button icon implementations (Plus, Trash2)
+- TypeScript compilation successful with no type errors
+- ESLint validation passed with no warnings
+- Build completes successfully in 950ms
