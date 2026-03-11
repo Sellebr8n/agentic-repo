@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { Plus, Trash2, ListTodo, Circle, CheckCircle } from 'lucide-react'
+import { Plus, Trash2, ListTodo, Circle, CheckCircle, AlertCircle, Clock } from 'lucide-react'
 import './App.css'
 
 type Todo = {
@@ -240,8 +240,8 @@ function App() {
                       <span
                         className={`todo-item__due-date todo-item__due-date--${status}`}
                       >
-                        {status === 'overdue' && '⚠ '}
-                        {status === 'due-soon' && '⏰ '}
+                        {status === 'overdue' && <AlertCircle size={16} className="inline" />}
+                        {status === 'due-soon' && <Clock size={16} className="inline" />}
                         Due: {formatDueDate(todo.dueDate)}
                       </span>
                     )}
