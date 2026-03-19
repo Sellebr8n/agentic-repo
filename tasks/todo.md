@@ -1,75 +1,125 @@
-# SCRUM-16: Add lucide-react icons to improve look and feel
+# SCRUM-18: PostNord-Inspired Visual Refresh
 
-## Tasks
-- [x] Install lucide-react package
-- [x] Update App.tsx: Import icons (Plus, Trash2, ListTodo, Circle, CheckCircle)
-- [x] Update App.tsx: Add Plus icon to Add button
-- [x] Update App.tsx: Add Trash2 icon to Remove buttons
-- [x] Update App.tsx: Add Trash2 icon to Clear done button
-- [x] Update App.tsx: Add icons to filter buttons (ListTodo, Circle, CheckCircle)
-- [x] Update App.css: Add icon+text alignment styles to buttons
-- [x] Update App.css: Add destructive styling for Clear done button
-- [x] Run npm build to verify no errors
-- [x] Verify all changes with manual testing
-- [x] Update App.tsx: Import AlertCircle and Clock icons
-- [x] Replace '⚠ ' emoji with AlertCircle icon in overdue due-date display
-- [x] Replace '⏰ ' emoji with Clock icon in due-soon due-date display
-- [x] Run npm build to verify no errors
-- [x] Run npm lint to verify code quality
-- [x] Update Review section with verification
+## PostNord Color Palette Reference
+- Deep PostNord Blue: #003E73 (primary base)
+- PostNord Medium Blue: #0A4C98 (gradient transition)
+- PostNord Light Blue: #1565C0 (accent highlight)
+- Soft Cyan: #00A9CE (accent)
+- Soft Red: #D32F2F (destructive actions, softer)
+- Light backgrounds: #F5F9FF, #F0F6FF, #FAFBFF (premium, airy)
+
+## Implementation Checklist
+
+### Step 1: Update index.css
+- [x] Update :root color variable to #003E73
+- [x] Update body background gradient to soft elegant blue tones
+  - [x] Use #F0F6FF to #E8F4FF radial + linear combination
+- [x] Verify global text color and background
+
+### Step 2: Update App.css - Hero Section
+- [x] Update .hero gradient to #003E73 → #0A4C98 → #1565C0
+- [x] Update .hero__dot color to #00A9CE
+- [x] Update .hero box-shadow to rgba(0, 62, 115, 0.35)
+
+### Step 3: Update App.css - Form Section
+- [x] Update .todo-form input border to #8BA3D0
+- [x] Update .todo-form input background to #FAFBFF
+- [x] Update .todo-form input text color to #003E73
+- [x] Update .todo-form input:focus-visible outline to #1565C0
+- [x] Update .todo-form button gradient to #0A4C98 → #1073D6 → #00A9CE
+- [x] Update .todo-form button box-shadow to rgba(10, 76, 152, 0.32)
+
+### Step 4: Update App.css - Card Styling
+- [x] Update .todo-card border to rgba(0, 62, 115, 0.12)
+- [x] Update .todo-card box-shadow to match new deep blue
+
+### Step 5: Update App.css - Filters Section
+- [x] Update .filters background to #EDF3FF
+- [x] Update .filters button text color to #0A4C98
+- [x] Update .filters button.is-active white bg with text #003E73
+- [x] Update .filters button.is-active shadow to rgba(10, 76, 152, 0.18)
+
+### Step 6: Update App.css - Stats & Typography
+- [x] Update .stats text color to #0A4C98
+
+### Step 7: Update App.css - Todo Items
+- [x] Update .todo-item and .empty-state border to #D8E4F5
+- [x] Update .todo-item and .empty-state background to #FAFBFF
+- [x] Update .todo-item__label text color to #003E73
+- [x] Update .todo-item__label input accent-color to #1565C0
+- [x] Update .todo-item.completed gradient to #F7FAFE → #EFF7FF
+- [x] Update .todo-item.completed span text color to #5A7BA3
+
+### Step 8: Update App.css - Due Dates & Actions
+- [x] Update .todo-item__due-date text color to #4A6BA5
+- [x] Update .todo-item__delete background to #EBF1FF
+- [x] Update .todo-item__delete text color to #0A4C98
+- [x] Update .todo-item__delete border color to #D1DDF5
+
+### Step 9: Update App.css - Secondary Buttons
+- [x] Update .secondary button background to #EEF3FF
+- [x] Update .secondary button text color to #003E73
+- [x] Update .secondary button border color to #D4E0F7
+- [x] Update .secondary--destructive red color to #D32F2F
+- [x] Update .secondary--destructive background to #FEE5E5
+- [x] Update .secondary--destructive border color to #F8BFBF
+
+### Step 10: Update App.css - Footer & Empty State
+- [x] Update .card-footer small text color to #4A6BA5
+- [x] Update .empty-state text color to #4A6BA5
+
+### Step 11: Commit Changes
+- [x] Stage all CSS changes
+- [x] Commit with meaningful message on feat/scrum-18 branch
 
 ## Review
 
 ### Tests Run
-- `npm run build`: Successful. No TypeScript or build errors. Build output: vite v7.3.1, 1743 modules transformed, built in 983ms
-- `npm run lint`: Successful. No ESLint errors or warnings
+- `npm run build` (from /client): Successful. No TypeScript errors. Build output: vite v7.3.1, 1743 modules transformed, built in 1.01s
+- `npm run lint` (from /client): Successful. No ESLint errors or warnings
 
 ### Changes Summary
 
 **Files Modified:**
-1. `client/src/App.tsx`
-   - Added import: `import { Plus, Trash2, ListTodo, Circle, CheckCircle } from 'lucide-react'`
-   - Add button (line 175): Added `<Plus size={18} />` icon with `.button-with-icon` class
-   - Filter buttons (lines 183-207): Added icon logic with `ListTodo` (All), `Circle` (Active), `CheckCircle` (Done) at size 16px with `.button-with-icon` and `.filter-button` classes
-   - Remove button (line 254-262): Added `<Trash2 size={16} />` icon with `.button-with-icon` class
-   - Clear done button (line 271-279): Added `<Trash2 size={18} />` icon with `.button-with-icon` and `.secondary--destructive` classes
+1. `/client/src/index.css`
+   - Updated :root color to #003E73 (Deep PostNord Blue)
+   - Updated background-color to #F0F6FF (Light premium background)
+   - Updated body background gradient from cyan-blue tones to soft PostNord blue tones
+   - Applied radial gradients with rgba(0, 169, 206, 0.15) and rgba(0, 62, 115, 0.12)
+   - Linear gradient: #F0F6FF to #E8F4FF
 
-2. `client/src/App.css`
-   - Added `.button-with-icon` class (lines 98-102): `display: inline-flex; align-items: center; gap: 0.4rem;` for proper icon+text alignment
-   - Added `.filter-button` class (lines 150-152): Reduces gap to `0.3rem` for compact filter button appearance
-   - Added `.secondary--destructive` class (lines 281-285): Red styling with `color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca;` for destructive action visual feedback
-
-### Verification
-- All icons are properly imported from lucide-react
-- Icon sizes are appropriate: 18px for main buttons, 16px for filter buttons and remove buttons
-- Icons and text are aligned horizontally using flexbox with proper gaps
-- Destructive button (Clear done) has red color scheme matching the error palette
-- All TypeScript types are correct
-- Basic accessibility review completed: aria-labels and semantic HTML maintained; destructive button colors updated to #b91c1c for WCAG AA compliance with enhanced hover/focus states
-- Build and lint pass without errors
-- Mobile responsive design maintained (icons scale appropriately with existing responsive CSS)
-
-## Additional Changes (AlertCircle and Clock icons)
-
-### Tests Run
-- `npm run build`: Successful. No TypeScript or build errors. Build output: vite v7.3.1, 1743 modules transformed, rendering chunks, built in 950ms
-- `npm run lint`: Successful. No ESLint errors or warnings
-
-### Changes Summary
-
-**Files Modified:**
-1. `client/src/App.tsx`
-   - Updated import (line 3): Added `AlertCircle, Clock` to lucide-react imports
-   - Due-date display (lines 243-244):
-     - Replaced '⚠ ' emoji with `<AlertCircle size={16} className="inline" />` for overdue status
-     - Replaced '⏰ ' emoji with `<Clock size={16} className="inline" />` for due-soon status
+2. `/client/src/App.css`
+   - Hero section: Updated gradient to #003E73 → #0A4C98 → #1565C0, box-shadow to rgba(0, 62, 115, 0.35)
+   - Hero dot: Updated color to #00A9CE (Soft Cyan)
+   - Form inputs: Border #8BA3D0, background #FAFBFF, text #003E73, focus outline #1565C0
+   - Form button: Gradient #0A4C98 → #1073D6 → #00A9CE, shadow rgba(10, 76, 152, 0.32)
+   - Todo card: Border rgba(0, 62, 115, 0.12), shadow rgba(0, 62, 115, 0.14)
+   - Filters: Background #EDF3FF, button text #0A4C98, active button text #003E73, shadow rgba(10, 76, 152, 0.18)
+   - Stats: Text color #0A4C98
+   - Todo items: Border #D8E4F5, background #FAFBFF
+   - Todo label: Text #003E73, checkbox accent #1565C0
+   - Completed items: Gradient #F7FAFE → #EFF7FF, text #5A7BA3
+   - Due date: Text #4A6BA5
+   - Delete button: Background #EBF1FF, text #0A4C98, border #D1DDF5
+   - Secondary buttons: Background #EEF3FF, text #003E73, border #D4E0F7
+   - Destructive buttons: Color #D32F2F, background #FEE5E5, border #F8BFBF
+   - Card footer: Text #4A6BA5
+   - Empty state: Text #4A6BA5
 
 ### Verification
-- AlertCircle and Clock icons are properly imported from lucide-react
-- Both icons use size={16} for consistency with other inline icons
-- className="inline" ensures proper inline display with surrounding text
-- Icons render correctly without breaking layout or text flow
-- No changes made to existing button icon implementations (Plus, Trash2)
-- TypeScript compilation successful with no type errors
-- ESLint validation passed with no warnings
-- Build completes successfully in 950ms
+- All color changes applied consistently across the app
+- No layout changes were made - only CSS color/gradient/shadow updates
+- PostNord color palette implemented throughout for premium, calm Scandinavian feel
+- Build completes successfully with no TypeScript errors
+- Lint validation passed with no warnings
+- All changes are cohesive and maintain visual hierarchy
+- Components maintain accessibility and responsive design
+- Commit hash: 3d6be69
+
+### PostNord Color Palette Applied
+- Deep PostNord Blue (#003E73): Primary base for text, active states
+- PostNord Medium Blue (#0A4C98): Buttons, filter text
+- PostNord Light Blue (#1565C0): Accents, focus states, checkbox
+- Soft Cyan (#00A9CE): Hero dot, gradient highlights
+- Soft Red (#D32F2F): Destructive actions
+- Light backgrounds: #F5F9FF, #F0F6FF, #FAFBFF, #EDF3FF, #EEF3FF, #EBF1FF
