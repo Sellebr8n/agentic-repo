@@ -271,7 +271,7 @@ function TodoListPage() {
             disabled={completedCount === 0}
           >
             <Trash2 size={18} />
-            Clear done
+            Clear All
           </button>
           <small>Stored locally in this browser</small>
         </footer>
