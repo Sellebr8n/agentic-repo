@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { Plus, Trash2, ListTodo, Circle, CheckCircle, AlertCircle, Clock } from 'lucide-react'
+import { Routes, Route, Link } from 'react-router-dom'
 import './App.css'
+import KanbanPage from './pages/KanbanPage'
 
 type Todo = {
   id: string
@@ -76,7 +78,7 @@ function createTodo(text: string, dueDate: string | null): Todo {
   }
 }
 
-function App() {
+function TodoListPage() {
   const [todos, setTodos] = useState<Todo[]>(readTodosFromStorage)
   const [draft, setDraft] = useState('')
   const [draftDueDate, setDraftDueDate] = useState('')
@@ -86,7 +88,6 @@ function App() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
   }, [todos])
 
-  // Re-render every minute to update due date statuses
   const [, setTick] = useState(0)
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60_000)
@@ -156,6 +157,7 @@ function App() {
         </div>
         <h1>Local Todo Manager</h1>
         <p>Simple task tracking in your browser, with no backend setup.</p>
+        <Link to="/kanban" className="hero-link">Kanban Board</Link>
       </header>
 
       <main className="todo-card">
@@ -275,6 +277,15 @@ function App() {
         </footer>
       </main>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<TodoListPage />} />
+      <Route path="/kanban" element={<KanbanPage />} />
+    </Routes>
   )
 }
 

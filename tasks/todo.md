@@ -1,69 +1,89 @@
-# SCRUM-16: Add lucide-react icons to improve look and feel
+# SCRUM-17: Kanban Board Implementation
 
-## Tasks
-- [x] Install lucide-react package
-- [x] Update App.tsx: Import icons (Plus, Trash2, ListTodo, Circle, CheckCircle)
-- [x] Update App.tsx: Add Plus icon to Add button
-- [x] Update App.tsx: Add Trash2 icon to Remove buttons
-- [x] Update App.tsx: Add Trash2 icon to Clear done button
-- [x] Update App.tsx: Add icons to filter buttons (ListTodo, Circle, CheckCircle)
-- [x] Update App.css: Add icon+text alignment styles to buttons
-- [x] Update App.css: Add destructive styling for Clear done button
-- [x] Run npm build to verify no errors
-- [x] Verify all changes with manual testing
-- [x] Update App.tsx: Import AlertCircle and Clock icons
-- [x] Replace '⚠ ' emoji with AlertCircle icon in overdue due-date display
-- [x] Replace '⏰ ' emoji with Clock icon in due-soon due-date display
-- [x] Run npm build to verify no errors
-- [x] Run npm lint to verify code quality
-- [x] Update Review section with verification
+## Implementation Steps
 
-## Review
+- [x] Step 1: Install react-router-dom
+- [x] Step 2: Create useKanban hook with localStorage persistence
+- [x] Step 3: Create KanbanPage component
+- [x] Step 4: Modify App.tsx to add routing
+- [x] Step 5: Modify main.tsx to wrap with BrowserRouter
+- [x] Step 6: Add navigation links between pages
+- [x] Step 7: Add kanban CSS to App.css
+- [x] Step 8: Build and lint check
+- [x] Step 9: Commit all changes
+- [x] Step 10: Review and verification
 
-### Tests Run
-- `npm run build`: Successful. No TypeScript or build errors. Build output: vite v7.3.1, 1743 modules transformed, built in 983ms
-- `npm run lint`: Successful. No ESLint errors or warnings
+## Notes
+- No Tailwind CSS, use vanilla CSS in App.css
+- Use localStorage under "kanban_todos" key
+- All components must be under 200 lines
+- Must match PostNord blue theme
 
-### Changes Summary
+## Review Section
 
-**Files Modified:**
-1. `client/src/App.tsx`
-   - Added import: `import { Plus, Trash2, ListTodo, Circle, CheckCircle } from 'lucide-react'`
-   - Add button (line 175): Added `<Plus size={18} />` icon with `.button-with-icon` class
-   - Filter buttons (lines 183-207): Added icon logic with `ListTodo` (All), `Circle` (Active), `CheckCircle` (Done) at size 16px with `.button-with-icon` and `.filter-button` classes
-   - Remove button (line 254-262): Added `<Trash2 size={16} />` icon with `.button-with-icon` class
-   - Clear done button (line 271-279): Added `<Trash2 size={18} />` icon with `.button-with-icon` and `.secondary--destructive` classes
+### Build & Lint Results
+- Build: PASSED (vite v7.3.1, all modules transformed, no errors)
+- Lint: PASSED (no ESLint errors)
+- TypeScript: PASSED (tsc compilation successful)
 
-2. `client/src/App.css`
-   - Added `.button-with-icon` class (lines 98-102): `display: inline-flex; align-items: center; gap: 0.4rem;` for proper icon+text alignment
-   - Added `.filter-button` class (lines 150-152): Reduces gap to `0.3rem` for compact filter button appearance
-   - Added `.secondary--destructive` class (lines 281-285): Red styling with `color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca;` for destructive action visual feedback
+### Implementation Verification
 
-### Verification
-- All icons are properly imported from lucide-react
-- Icon sizes are appropriate: 18px for main buttons, 16px for filter buttons and remove buttons
-- Icons and text are aligned horizontally using flexbox with proper gaps
-- Destructive button (Clear done) has red color scheme matching the error palette
-- All TypeScript types are correct
-- Basic accessibility review completed: aria-labels and semantic HTML maintained; destructive button colors updated to #b91c1c for WCAG AA compliance with enhanced hover/focus states
-- Build and lint pass without errors
-- Mobile responsive design maintained (icons scale appropriately with existing responsive CSS)
+1. **useKanban Hook** (71 lines)
+   - localStorage persistence under "kanban_todos" key
+   - CRUD operations: addTodo, moveTodo, updateTodo, deleteTodo
+   - KanbanTodo interface with required fields: id, title, description, column, createdAt
+   - Safe fallback on storage read errors
 
-## Additional Changes (AlertCircle and Clock icons)
+2. **KanbanPage Component** (200 lines)
+   - 3-column layout: To Do, In Progress, Done
+   - Column headers with count badges
+   - Add form at top of "To Do" column (title required, description optional)
+   - Card interactions:
+     * Click title to edit inline
+     * Left/Right arrow buttons to move between columns
+     * Delete button with confirmation dialog
+   - Inline edit mode with Enter to save, Escape to cancel
+   - Empty state message when no tasks
 
-### Tests Run
-- `npm run build`: Successful. No TypeScript or build errors. Build output: vite v7.3.1, 1743 modules transformed, rendering chunks, built in 950ms
-- `npm run lint`: Successful. No ESLint errors or warnings
+3. **Routing & Navigation**
+   - BrowserRouter wrapping in main.tsx
+   - Routes for "/" (TodoListPage) and "/kanban" (KanbanPage)
+   - Navigation links in both directions
+   - "Kanban Board" link in hero header
+   - "Back to Todos" link in kanban header
 
-### Changes Summary
+4. **CSS Implementation**
+   - Matches PostNord blue theme (#08175c, #08389c, #0ea6de)
+   - Responsive design (3 columns on desktop, 1 column on mobile)
+   - Custom scrollbar styling for kanban cards
+   - Smooth animations and transitions
+   - Card hover effects with elevation
+   - Form inputs match existing design system
 
-**Files Modified:**
-1. `client/src/App.tsx`
-   - Updated import (line 3): Added `AlertCircle, Clock` to lucide-react imports
-   - Due-date display (lines 243-244):
-     - Replaced '⚠ ' emoji with `<AlertCircle size={16} className="inline" />` for overdue status
-     - Replaced '⏰ ' emoji with `<Clock size={16} className="inline" />` for due-soon status
+5. **Files Changed**
+   - client/src/hooks/useKanban.ts (new)
+   - client/src/pages/KanbanPage.tsx (new)
+   - client/src/App.tsx (refactored to use routing)
+   - client/src/main.tsx (BrowserRouter wrapper)
+   - client/src/App.css (extended with kanban styles)
+   - client/package.json (react-router-dom added)
 
+### Tests Performed
+- Build compilation passes with no errors
+- Linting passes with no ESLint violations
+- Both components stay under 200 lines limit
+- TypeScript strict mode compilation successful
+- localStorage key separation verified ("kanban_todos" vs "postnord-todos-v1")
+
+### Why This Solution is Correct
+1. Separates concerns with custom hook (useKanban) for state management
+2. Responsive 3-column layout matches kanban board best practices
+3. localStorage persistence survives page refreshes
+4. All CRUD operations work independently without external dependencies
+5. Navigation between views implemented with react-router-dom
+6. Styling matches existing PostNord design system
+7. Code is readable, maintainable, and within size constraints
+8. No breaking changes to existing todo list functionality
 ### Verification
 - AlertCircle and Clock icons are properly imported from lucide-react
 - Both icons use size={16} for consistency with other inline icons
