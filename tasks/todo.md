@@ -1,64 +1,82 @@
-# SCRUM-17: Kanban Board Implementation
+# SCRUM-18: PostNord-Inspired Visual Refresh
 
-## Implementation Steps
+## PostNord Color Palette Reference
+- Deep PostNord Blue: #003E73 (primary base)
+- PostNord Medium Blue: #0A4C98 (gradient transition)
+- PostNord Light Blue: #1565C0 (accent highlight)
+- Soft Cyan: #00A9CE (accent)
+- Soft Red: #D32F2F (destructive actions, softer)
+- Light backgrounds: #F5F9FF, #F0F6FF, #FAFBFF (premium, airy)
 
-- [x] Step 1: Install react-router-dom
-- [x] Step 2: Create useKanban hook with localStorage persistence
-- [x] Step 3: Create KanbanPage component
-- [x] Step 4: Modify App.tsx to add routing
-- [x] Step 5: Modify main.tsx to wrap with BrowserRouter
-- [x] Step 6: Add navigation links between pages
-- [x] Step 7: Add kanban CSS to App.css
-- [x] Step 8: Build and lint check
-- [x] Step 9: Commit all changes
-- [x] Step 10: Review and verification
+## Implementation Checklist
 
-## Notes
-- No Tailwind CSS, use vanilla CSS in App.css
-- Use localStorage under "kanban_todos" key
-- All components must be under 200 lines
-- Must match PostNord blue theme
+### Step 1: Update index.css
+- [x] Update :root color variable to #003E73
+- [x] Update body background gradient to soft elegant blue tones
+  - [x] Use #F0F6FF to #E8F4FF radial + linear combination
+- [x] Verify global text color and background
 
-## Review Section
+### Step 2: Update App.css - Hero Section
+- [x] Update .hero gradient to #003E73 → #0A4C98 → #1565C0
+- [x] Update .hero__dot color to #00A9CE
+- [x] Update .hero box-shadow to rgba(0, 62, 115, 0.35)
 
-### Build & Lint Results
-- Build: PASSED (vite v7.3.1, all modules transformed, no errors)
-- Lint: PASSED (no ESLint errors)
-- TypeScript: PASSED (tsc compilation successful)
+### Step 3: Update App.css - Form Section
+- [x] Update .todo-form input border to #8BA3D0
+- [x] Update .todo-form input background to #FAFBFF
+- [x] Update .todo-form input text color to #003E73
+- [x] Update .todo-form input:focus-visible outline to #1565C0
+- [x] Update .todo-form button gradient to #0A4C98 → #1073D6 → #00A9CE
+- [x] Update .todo-form button box-shadow to rgba(10, 76, 152, 0.32)
 
-### Implementation Verification
+### Step 4: Update App.css - Card Styling
+- [x] Update .todo-card border to rgba(0, 62, 115, 0.12)
+- [x] Update .todo-card box-shadow to match new deep blue
 
-1. **useKanban Hook** (71 lines)
-   - localStorage persistence under "kanban_todos" key
-   - CRUD operations: addTodo, moveTodo, updateTodo, deleteTodo
-   - KanbanTodo interface with required fields: id, title, description, column, createdAt
-   - Safe fallback on storage read errors
+### Step 5: Update App.css - Filters Section
+- [x] Update .filters background to #EDF3FF
+- [x] Update .filters button text color to #0A4C98
+- [x] Update .filters button.is-active white bg with text #003E73
+- [x] Update .filters button.is-active shadow to rgba(10, 76, 152, 0.18)
 
-2. **KanbanPage Component** (200 lines)
-   - 3-column layout: To Do, In Progress, Done
-   - Column headers with count badges
-   - Add form at top of "To Do" column (title required, description optional)
-   - Card interactions:
-     * Click title to edit inline
-     * Left/Right arrow buttons to move between columns
-     * Delete button with confirmation dialog
-   - Inline edit mode with Enter to save, Escape to cancel
-   - Empty state message when no tasks
+### Step 6: Update App.css - Stats & Typography
+- [x] Update .stats text color to #0A4C98
 
-3. **Routing & Navigation**
-   - BrowserRouter wrapping in main.tsx
-   - Routes for "/" (TodoListPage) and "/kanban" (KanbanPage)
-   - Navigation links in both directions
-   - "Kanban Board" link in hero header
-   - "Back to Todos" link in kanban header
+### Step 7: Update App.css - Todo Items
+- [x] Update .todo-item and .empty-state border to #D8E4F5
+- [x] Update .todo-item and .empty-state background to #FAFBFF
+- [x] Update .todo-item__label text color to #003E73
+- [x] Update .todo-item__label input accent-color to #1565C0
+- [x] Update .todo-item.completed gradient to #F7FAFE → #EFF7FF
+- [x] Update .todo-item.completed span text color to #5A7BA3
 
-4. **CSS Implementation**
-   - Matches PostNord blue theme (#08175c, #08389c, #0ea6de)
-   - Responsive design (3 columns on desktop, 1 column on mobile)
-   - Custom scrollbar styling for kanban cards
-   - Smooth animations and transitions
-   - Card hover effects with elevation
-   - Form inputs match existing design system
+### Step 8: Update App.css - Due Dates & Actions
+- [x] Update .todo-item__due-date text color to #4A6BA5
+- [x] Update .todo-item__delete background to #EBF1FF
+- [x] Update .todo-item__delete text color to #0A4C98
+- [x] Update .todo-item__delete border color to #D1DDF5
+
+### Step 9: Update App.css - Secondary Buttons
+- [x] Update .secondary button background to #EEF3FF
+- [x] Update .secondary button text color to #003E73
+- [x] Update .secondary button border color to #D4E0F7
+- [x] Update .secondary--destructive red color to #D32F2F
+- [x] Update .secondary--destructive background to #FEE5E5
+- [x] Update .secondary--destructive border color to #F8BFBF
+
+### Step 10: Update App.css - Footer & Empty State
+- [x] Update .card-footer small text color to #4A6BA5
+- [x] Update .empty-state text color to #4A6BA5
+
+### Step 11: Commit Changes
+- [x] Stage all CSS changes
+- [x] Commit with meaningful message on feat/scrum-18 branch
+
+## Review
+
+### Tests Run
+- `npm run build` (from /client): Successful. No TypeScript errors. Build output: vite v7.3.1, 1743 modules transformed, built in 1.01s
+- `npm run lint` (from /client): Successful. No ESLint errors or warnings
 
 5. **Files Changed**
    - client/src/hooks/useKanban.ts (new)
@@ -68,12 +86,31 @@
    - client/src/App.css (extended with kanban styles)
    - client/package.json (react-router-dom added)
 
-### Tests Performed
-- Build compilation passes with no errors
-- Linting passes with no ESLint violations
-- Both components stay under 200 lines limit
-- TypeScript strict mode compilation successful
-- localStorage key separation verified ("kanban_todos" vs "postnord-todos-v1")
+**Files Modified:**
+1. `/client/src/index.css`
+   - Updated :root color to #003E73 (Deep PostNord Blue)
+   - Updated background-color to #F0F6FF (Light premium background)
+   - Updated body background gradient from cyan-blue tones to soft PostNord blue tones
+   - Applied radial gradients with rgba(0, 169, 206, 0.15) and rgba(0, 62, 115, 0.12)
+   - Linear gradient: #F0F6FF to #E8F4FF
+
+2. `/client/src/App.css`
+   - Hero section: Updated gradient to #003E73 → #0A4C98 → #1565C0, box-shadow to rgba(0, 62, 115, 0.35)
+   - Hero dot: Updated color to #00A9CE (Soft Cyan)
+   - Form inputs: Border #8BA3D0, background #FAFBFF, text #003E73, focus outline #1565C0
+   - Form button: Gradient #0A4C98 → #1073D6 → #00A9CE, shadow rgba(10, 76, 152, 0.32)
+   - Todo card: Border rgba(0, 62, 115, 0.12), shadow rgba(0, 62, 115, 0.14)
+   - Filters: Background #EDF3FF, button text #0A4C98, active button text #003E73, shadow rgba(10, 76, 152, 0.18)
+   - Stats: Text color #0A4C98
+   - Todo items: Border #D8E4F5, background #FAFBFF
+   - Todo label: Text #003E73, checkbox accent #1565C0
+   - Completed items: Gradient #F7FAFE → #EFF7FF, text #5A7BA3
+   - Due date: Text #4A6BA5
+   - Delete button: Background #EBF1FF, text #0A4C98, border #D1DDF5
+   - Secondary buttons: Background #EEF3FF, text #003E73, border #D4E0F7
+   - Destructive buttons: Color #D32F2F, background #FEE5E5, border #F8BFBF
+   - Card footer: Text #4A6BA5
+   - Empty state: Text #4A6BA5
 
 ### Why This Solution is Correct
 1. Separates concerns with custom hook (useKanban) for state management
@@ -85,37 +122,19 @@
 7. Code is readable, maintainable, and within size constraints
 8. No breaking changes to existing todo list functionality
 ### Verification
-- AlertCircle and Clock icons are properly imported from lucide-react
-- Both icons use size={16} for consistency with other inline icons
-- className="inline" ensures proper inline display with surrounding text
-- Icons render correctly without breaking layout or text flow
-- No changes made to existing button icon implementations (Plus, Trash2)
-- TypeScript compilation successful with no type errors
-- ESLint validation passed with no warnings
-- Build completes successfully in 950ms
+- All color changes applied consistently across the app
+- No layout changes were made - only CSS color/gradient/shadow updates
+- PostNord color palette implemented throughout for premium, calm Scandinavian feel
+- Build completes successfully with no TypeScript errors
+- Lint validation passed with no warnings
+- All changes are cohesive and maintain visual hierarchy
+- Components maintain accessibility and responsive design
+- Commit hash: 3d6be69
 
-## Final Styling Refinement for Clear All Button (SCRUM-16)
-
-### Changes Made
-1. Updated `client/src/App.tsx` (line 272): Changed button label from "Clear done" to "Clear All"
-2. Updated `client/src/App.css` (lines 281-303):
-   - Changed `.secondary--destructive` background from light pink (#fee2e2) to prominent red (#dc2626)
-   - Changed text color from dark red (#b91c1c) to white (#ffffff)
-   - Updated border color to #b91c1c
-   - Enhanced hover state: darker red background (#b91c1c) with translateY transform
-   - Updated focus outline to dark red (#7f1d1d)
-   - Updated disabled state colors for better contrast
-
-### Tests Run
-- `npm run build`: Successful. Build output: vite v7.3.1, 1743 modules transformed, built in 916ms
-- `npm run lint`: Successful. No ESLint errors or warnings
-
-### Verification
-- Clear All button now has visually prominent red background (#dc2626) with white text
-- Icon alignment maintained with .button-with-icon flexbox styling
-- Hover and focus states provide proper visual feedback
-- Disabled state styling ensures visibility when button is disabled
-- All icon implementations remain intact (Plus, Trash2, ListTodo, Circle, CheckCircle, AlertCircle, Clock)
-- Button text properly aligned with Trash2 icon (18px) using gap property
-- TypeScript and ESLint validation successful
-- Build completes successfully
+### PostNord Color Palette Applied
+- Deep PostNord Blue (#003E73): Primary base for text, active states
+- PostNord Medium Blue (#0A4C98): Buttons, filter text
+- PostNord Light Blue (#1565C0): Accents, focus states, checkbox
+- Soft Cyan (#00A9CE): Hero dot, gradient highlights
+- Soft Red (#D32F2F): Destructive actions
+- Light backgrounds: #F5F9FF, #F0F6FF, #FAFBFF, #EDF3FF, #EEF3FF, #EBF1FF
